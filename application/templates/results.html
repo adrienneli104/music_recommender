@@ -1,9 +1,10 @@
-{% extends "home.html" %}
+{% extends "background.html" %}
 {% block results %}
 <div class='results'>
-    <h2 style='color: #ececec'>Results</h2>
-        {% for song in songs %}
+    <h4>Songs</h4>
+    {% for song in songs %}
         <p class='song' style="font-size: 11pt"> <a  href={{song[2]}} target="_blank"> {{ song[0]}} </a> </p>
-        {% endfor %}    
+    {% endfor %}    
+    <a href="/"><button type="button">Reset</button></a>
 </div>
 {% endblock %}

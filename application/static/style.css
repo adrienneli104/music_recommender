@@ -1,15 +1,12 @@
-.bg {
-    position: absolute;
-    min-height: 100%;
-    top: 0;
-    width: 100%;
-    z-index: 0;
-}
-
+html,
 body {
     font: 15px/1.5 Arial, Helvetica, sans-serif;
     padding: 0px;
     background-color: #000000;
+}
+
+h4 {
+    color: white;
 }
 
 .container {
@@ -45,7 +42,7 @@ body {
 
 .song {
     background-color: #ececec;
-    border-left: solid 4px #81b71a;
+    border-left: solid 4px rgb(26, 179, 133);
     line-height: 18px;
     overflow: hidden;
     padding: 12px;
@@ -63,16 +60,16 @@ input.input1,
     padding: 0.46em 1.6em;
     border: 0.1em solid #000000;
     margin: 0 0.2em 0.2em 0;
-    border-radius: 0.12em;
     box-sizing: border-box;
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     color: #000000;
     text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
-    background-color: #81b71a;
+    background-color: rgb(26, 179, 133);
     text-align: center;
     transition: all 0.15s;
+    border-radius: 10px;
 }
 
 input.input1 {
@@ -88,7 +85,7 @@ input.button1:hover {
 input.input1:hover {
     text-shadow: 0 0 2em rgba(255, 255, 255, 1);
     color: #FFFFFF;
-    border-color: #81b71a;
+    border-color: rgb(26, 179, 133);
 }
 
 #number-of-recs:hover {
