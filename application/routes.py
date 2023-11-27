@@ -27,18 +27,25 @@ def recommend():
    # Get number of song recommendations from user input
    number_of_recs = int(request.form['number-of-recs'])
    # Get recommendations
-   model_result = make_recommendations(playlist, data, scaler, model, number_of_recs)
-   rec_ids = list(model_result['track_id'])
-   song_data = data[data['track_id'].isin(rec_ids)]
-   song_data['similarity'] = model_result['similarity']
+   model_result = get_recommendations(model, data, playlist, scaler, number_of_recs)
+   model_result = model_result.sort_values(by=['track_id'])
+   song_ids = list(model_result['track_id'])
+   song_data = data[data['track_id'].isin(song_ids)]
+   song_data = song_data.sort_values(by=['track_id'])
+   print("model_result", model_result)
+   print("song_data", song_data)
+   song_data.insert(0, 'similarity', model_result['similarity'].to_list())
    song_recomendations = []
    # Store spotify song link, track name, artist name, and similarity score
    for i in range(number_of_recs):
-      recommendation = song_data.loc[[i]]
+      recommendation = song_data.iloc[[i]]
       link = "https://open.spotify.com/track/" + recommendation['track_id'].values[0]
       track_name = recommendation['track_name'].values[0].capitalize()
-      first, last = recommendation['artists'].values[0].split(";")[0].split(" ")
-      artist_name = first.capitalize() + " " + last.capitalize()
+      first_artist = recommendation['artists'].values[0].split(";")[0]
+      artist_name = ""
+      for word in first_artist.split(" "):
+         artist_name += word.capitalize() + " "
+      artist_name = artist_name[:-1]
       sim = round(recommendation['similarity'].values[0], 2)
       danceability = round(recommendation['danceability'].values[0], 2)
       loudness = round(recommendation['loudness'].values[0], 2)
@@ -52,5 +59,4 @@ def recommend():
                                   danceability, loudness, speechiness, 
                                   acousticness, instrumentalness, liveness, 
                                   valence, tempo])
-   print(playlist_features)
    return render_template('results.html',songs= song_recomendations, playlist=playlist_features)

@@ -11,11 +11,9 @@ import re
 '''
   Description: Cleans data to only exclude categorical variables
     
-  Input Param:
-  -d: song data
+  -param[in] d: song data
 
-  Output Param:
-  -d: song data without categorical variables
+  -param[out] d: song data without categorical variables
 '''
 def get_relevant_cols(d):
     return d.drop(['track_id', 'track_genre', 'album_name','track_name', 'explicit', 'artists', 'mode', 'key',  'time_signature', 'duration_ms', 'popularity', 'energy'], axis=1)
@@ -23,14 +21,12 @@ def get_relevant_cols(d):
   Description: Returns number of clusters, frequency and percentage for each
   given model prediction for user playlist
 
-  Input Param:
-  -predictions: model prediction for user playlist
-  -top_n: number of cluster classes
+  -param[in] predictions: model prediction for user playlist
+  -param[in] top_n: number of cluster classes
 
-  Output Param:
-  -cluster_num: minimum between top_n and unique values
-  -freq_clusters: clusters sorted by increasing freq
-  -freq_percent: percentage that each cluster should be used in the recommendation
+  -param[out] cluster_num: minimum between top_n and unique values
+  -param[out] freq_clusters: clusters sorted by increasing freq
+  -param[out] freq_percent: percentage that each cluster should be used in the recommendation
 '''
 def get_freq_clusters(predictions, top_n):
     unique_vals, freq = np.unique(predictions, return_counts=True)
@@ -43,54 +39,46 @@ def get_freq_clusters(predictions, top_n):
     return cluster_num, freq_clusters, freq_percent
 
 '''
-  Description: Given a spotify playlist, applies K-Means model and returns
-  song recommendations that have similar audio features
-    
-  Input Param:
-  -playlist: user playlist, list of track_id
-  -data: dataset with all songs
-  -scaler: fitted scaler
-  -model: k-cluster model
-  -recNum: number of song recommendations
-  -top_n: number of cluster classes
+  -param[in] playlist: user playlist, list of track_id
+  -param[in] song_data: dataset with all songs
+  -param[in] scaler: fitted scaler
+  -param[in] model: k-cluster model
+  -param[in] rec_count_max: number of song recommendations
+  -param[in] top_n: number of cluster classes
 
-  Output Param:
-  -recs_id: song recommendations
+  -param[out] song_recs: song recommendations
 '''
-def make_recommendations(playlist, data, scaler, model, recNum=5, top_n=3):
+def get_recommendations(model, song_data, playlist, scaler, rec_count_max=5, top_n=3):
     # Transform and predict
     songs = playlist['track_id'].values.tolist()
     X = playlist.drop(['track_id'], axis=1)
-    transformed_X = scaler.fit_transform(X)
-    predictions = model.predict(transformed_X)
+    X = scaler.fit_transform(X)
+    predictions = model.predict(X)
 
-    dataset = get_relevant_cols(data)
-    dataset = scaler.transform(dataset)
+    data = get_relevant_cols(song_data)
+    data = scaler.transform(data)
 
+    song_recs = pd.DataFrame(columns=['track_id', 'similarity'])
     # Get most frequent cluster classes from user input
-    cluster_num, freq_clusters, freq_percent = get_freq_clusters(predictions, top_n)
-
-    recs_id = pd.DataFrame(columns=['track_id', 'similarity'])
-    recs = pd.DataFrame(columns=data.columns)
+    cluster_num, freq_clusters, freq_perc = get_freq_clusters(predictions, top_n)
     for i in range(cluster_num):
         # Number of recommendations from given cluster
-        rec_num = round(freq_percent[i] * recNum)
-        cur_cluster = freq_clusters[i]
+        rec_count = round(freq_perc[i] * rec_count_max)
+        cur_cluster_number = freq_clusters[i]
 
         # Create mean vector and calculate similarity
-        pos = np.where(predictions == cur_cluster)[0]
-        cluster_songs = transformed_X[pos, :]
+        pos = np.where(predictions == cur_cluster_number)[0] 
+        cluster_songs = X[pos, :]
         mean_song = np.mean(cluster_songs, axis=0)
-        similarity = cdist(np.reshape(mean_song, (1,-1)), dataset)
-
+        similarity = cdist(np.reshape(mean_song, (1,-1)), data)
+        
         # Sort to get similar songs
         similarity_s = pd.Series(similarity.flatten(), name='similarity')
-        similar_songs = pd.concat([data['track_id'].reset_index(drop=True), similarity_s.reset_index(drop=True)], axis=1)
-        recs_id = recs_id._append(similar_songs)
-
+        similar_songs = pd.concat([song_data['track_id'].reset_index(drop=True), similarity_s.reset_index(drop=True)], axis=1)
         # Remove songs from user_songs list
         similar_songs = similar_songs[~(similar_songs['track_id'].isin(songs))]
         similar_songs = similar_songs.sort_values(by='similarity', ascending=True).reset_index(drop=True)
-
-    recs_id = recs_id.reset_index(drop=True)
-    return recs_id.loc[:recNum-1]
+        song_recs = song_recs._append(similar_songs)
+        
+    song_recs = song_recs.reset_index(drop=True)
+    return song_recs.loc[:rec_count_max-1]
