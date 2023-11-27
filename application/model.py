@@ -19,7 +19,6 @@ import re
 '''
 def get_relevant_cols(d):
     return d.drop(['track_id', 'track_genre', 'album_name','track_name', 'explicit', 'artists', 'mode', 'key',  'time_signature', 'duration_ms', 'popularity', 'energy'], axis=1)
-
 '''
   Description: Returns number of clusters, frequency and percentage for each
   given model prediction for user playlist

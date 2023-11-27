@@ -3,6 +3,27 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import pandas as pd
 
+def get_mean_features(playlist):
+    n = float(len(playlist))
+    features = {'danceability' : 0,
+                'loudness' : 0,
+                'speechiness' : 0,
+                'acousticness' : 0,
+                'instrumentalness' : 0,
+                'liveness' : 0,
+                'valence' : 0,
+                'tempo' : 0 }
+    for index, row in playlist.iterrows():
+        features['danceability'] += row['danceability']
+        features['loudness'] += row['loudness']
+        features['speechiness'] += row['speechiness']
+        features['acousticness'] += row['acousticness']
+        features['instrumentalness'] += row['instrumentalness']
+        features['liveness'] += row['liveness']
+        features['valence'] += row['valence']
+        features['tempo'] += row['tempo']
+    return [round(x/n, 2) for x in features.values()]
+
 def extract(URL):
     client_id = "5356afb958c84e71a2c37c43e2a2cbf2" 
     client_secret = "83e531491e9c458ba658ac30c4c56bc0"

@@ -23,6 +23,7 @@ def recommend():
    # Get playlist data from user input (spotify playlist link)
    URL = request.form['URL']
    playlist = extract(URL)
+   playlist_features = get_mean_features(playlist)
    # Get number of song recommendations from user input
    number_of_recs = int(request.form['number-of-recs'])
    # Get recommendations
@@ -36,8 +37,20 @@ def recommend():
       recommendation = song_data.loc[[i]]
       link = "https://open.spotify.com/track/" + recommendation['track_id'].values[0]
       track_name = recommendation['track_name'].values[0].capitalize()
-      first, last = recommendation['artists'].values[0].split(" ")
+      first, last = recommendation['artists'].values[0].split(";")[0].split(" ")
       artist_name = first.capitalize() + " " + last.capitalize()
-      sim = recommendation['similarity'].values[0]
-      song_recomendations.append([track_name, artist_name, link, sim])
-   return render_template('results.html',songs= song_recomendations)
+      sim = round(recommendation['similarity'].values[0], 2)
+      danceability = round(recommendation['danceability'].values[0], 2)
+      loudness = round(recommendation['loudness'].values[0], 2)
+      speechiness = round(recommendation['speechiness'].values[0], 2)
+      acousticness = round(recommendation['acousticness'].values[0], 2)
+      instrumentalness = round(recommendation['instrumentalness'].values[0], 2)
+      liveness = round(recommendation['liveness'].values[0], 2)
+      valence = round(recommendation['valence'].values[0], 2)
+      tempo = round(recommendation['tempo'].values[0], 2)
+      song_recomendations.append([track_name, artist_name, link, sim, 
+                                  danceability, loudness, speechiness, 
+                                  acousticness, instrumentalness, liveness, 
+                                  valence, tempo])
+   print(playlist_features)
+   return render_template('results.html',songs= song_recomendations, playlist=playlist_features)
