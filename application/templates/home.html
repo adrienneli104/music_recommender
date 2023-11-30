@@ -1,22 +1,27 @@
 {% extends "background.html" %}
 {% block home %}
-<div class='home'>
-	<h4 class="text-white">Enter a Spotify Playlist Link</h4>
-	<form action="{{ url_for('recommend') }}"  id="form1" method="POST" placeholder="Playlist link">
-		<input class="input1 text-black" type="text" name="URL">
-		<div class="break"></div>
-		<small id="emailHelp" class="form-text text-muted"> You can find the playlist link by following instructions <a href="https://wordpress.com/support/audio/spotify/" target="_blank"> here </a> </small>
-		<div class="break"></div>
-			<label style='color: #ececec' for="number-of-recs" >Number of song recommendations &nbsp;</label>
-			<select name="number-of-recs" id="number-of-recs" form="form1">
-				<option value="5" selected> 5</option>
-				<option value="10">10</option>
-				<option value="15">15</option>
-				<option value="20">20</option>
-			</select>
+<div class="col">
+	<img src="static/images/album_cover.jpg" style="width:70%;">
+</div>
+<div class="col-lg">
+	<div class='home'>
+		<h4 class="text-white">Enter a Spotify Playlist Link</h4>
+		<form action="{{ url_for('recommend') }}"  id="form1" method="POST" placeholder="Playlist link">
+			<input class="input1 text-black" type="text" name="URL">
 			<div class="break"></div>
-		<input class='btn button1' form='form1' value='Find Recommendations' type="submit">
-	</form>
+			<small id="emailHelp" class="form-text text-muted"> You can find the playlist link by following instructions <a href="https://wordpress.com/support/audio/spotify/" target="_blank"> here </a> </small>
+			<div class="break"></div>
+				<label style='color: #ececec' for="number-of-recs" >Number of song recommendations &nbsp;</label>
+				<select name="number-of-recs" id="number-of-recs" form="form1">
+					<option value="5" selected> 5</option>
+					<option value="10">10</option>
+					<option value="15">15</option>
+					<option value="20">20</option>
+				</select>
+				<div class="break"></div>
+			<input class='btn button1' form='form1' value='Find Recommendations' type="submit">
+		</form>
+	</div>
 </div>
 {% endblock %}
 		

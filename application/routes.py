@@ -39,7 +39,7 @@ def recommend():
    # Store spotify song link, track name, artist name, and similarity score
    for i in range(number_of_recs):
       recommendation = song_data.iloc[[i]]
-      link = "https://open.spotify.com/track/" + recommendation['track_id'].values[0]
+      link = recommendation['track_id'].values[0]
       track_name = recommendation['track_name'].values[0].capitalize()
       first_artist = recommendation['artists'].values[0].split(";")[0]
       artist_name = ""

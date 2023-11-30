@@ -1,51 +1,61 @@
 {% extends "background.html" %}
 {% block results %}
-<table class="table table-hover table-dark">
-    <thead>
-        <tr>
-        <th scope="col">Song Name</th>
-        <th scope="col">Artist Name</th>
-        <th scope="col">Similarity Score &nbsp;&nbsp;
-            <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="left" 
-                    data-content="The similarity score measures how 
-                    similar the audio features of a song are to the playlist. 
-                    A lower score indicates it's more similar. "></i>
-        </th>
-        </tr>
-    </thead>
-    <div class='results'>
-    <tbody>
-    {% for song in songs %}
-        <tr>
-            <td><a  href={{song[2]}} target="_blank"> {{ song[0]}} </a></td>
-            <td><p> {{ song[1]}} </p></td>
-            <td><p> {{ song[3]}} &nbsp;&nbsp;
-                <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="right" 
-                    data-content="This Song &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Playlist<br/>
-                                  Danceability: {{song[4]}} &nbsp;&nbsp; {{playlist[0]}}<br/>
-                                  Loudness: {{song[5]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[1]}}<br/>
-                                  Speechiness: {{song[6]}} &nbsp;&nbsp; {{playlist[2]}}<br/>
-                                  Acousticness: {{song[7]}} &nbsp; {{playlist[3]}}<br/>
-                                  Instrumental: {{song[8]}} &nbsp;&nbsp;&nbsp; {{playlist[4]}}<br/>
-                                  Liveness: {{song[9]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[5]}}<br/>
-                                  Valence: {{song[10]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[6]}}<br/>
-                                  Tempo: {{song[11]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[7]}}"></i> 
-            </p></td>
-        </tr>
-    {% endfor %}
-    </tbody>
+<div class="col">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+            <th scope="col">Song</th>
+            <th scope="col" class="col-md">Similarity &nbsp;
+                <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="left" 
+                        data-content="The similarity score measures how 
+                        similar the audio features of a song are to the playlist. 
+                        A lower score indicates it's more similar. "></i>
+            </th>
+            </tr>
+        </thead>
+        <div class='results'>
+        <tbody>
+        {% for song in songs %}
+            <tr onclick="viewSong(this, {{song[2]}})">
+                <td>
+                    <div id="embed-iframe"></div>
+                    <script src="https://open.spotify.com/embed/iframe-api/v1" async>
+                    </script>
+                    <iframe id="frame" style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/{{song[2]}}?utm_source=generator" 
+                    width="100%" height="152" frameBorder="0" allowfullscreen="" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy"></iframe>
+                </td>
+                <td><p> {{ song[3]}} &nbsp;&nbsp;
+                    <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="right" 
+                        data-content="This Song &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Playlist<br/>
+                                    Danceability: {{song[4]}} &nbsp;&nbsp; {{playlist[0]}}<br/>
+                                    Loudness: {{song[5]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[1]}}<br/>
+                                    Speechiness: {{song[6]}} &nbsp;&nbsp; {{playlist[2]}}<br/>
+                                    Acousticness: {{song[7]}} &nbsp; {{playlist[3]}}<br/>
+                                    Instrumental: {{song[8]}} &nbsp;&nbsp;&nbsp; {{playlist[4]}}<br/>
+                                    Liveness: {{song[9]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[5]}}<br/>
+                                    Valence: {{song[10]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[6]}}<br/>
+                                    Tempo: {{song[11]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[7]}}"></i> 
+                </p></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </div>
+    </table> 
+    <div class="col text-center">   
+        <a href="/"><input class='btn button1' value='Reset'></a>
     </div>
-</table> 
-<div class="col text-center">   
-<a href="/"><input class='btn button1' value='Reset'></a>
 </div>
-
+<div class="col-lg">
+    
+</div>
 <script>
-$(document).ready(function(){
-  $('[data-toggle="popover"]').popover({
-    html:true
-  });   
-  
-});
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({
+            html:true
+        });   
+    });
 </script>
 {% endblock %}
