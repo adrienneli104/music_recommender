@@ -16,7 +16,7 @@
         <div class='results'>
         <tbody>
         {% for song in songs %}
-            <tr onclick="viewSong(this, {{song[2]}})">
+            <tr onclick="viewSong({{ song[4:10] }})">
                 <td>
                     <div id="embed-iframe"></div>
                     <script src="https://open.spotify.com/embed/iframe-api/v1" async>
@@ -31,12 +31,12 @@
                     <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="right" 
                         data-content="This Song &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Playlist<br/>
                                     Danceability: {{song[4]}} &nbsp;&nbsp; {{playlist[0]}}<br/>
-                                    Loudness: {{song[5]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[1]}}<br/>
-                                    Speechiness: {{song[6]}} &nbsp;&nbsp; {{playlist[2]}}<br/>
-                                    Acousticness: {{song[7]}} &nbsp; {{playlist[3]}}<br/>
-                                    Instrumental: {{song[8]}} &nbsp;&nbsp;&nbsp; {{playlist[4]}}<br/>
-                                    Liveness: {{song[9]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[5]}}<br/>
-                                    Valence: {{song[10]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[6]}}<br/>
+                                    Speechiness: {{song[5]}} &nbsp;&nbsp; {{playlist[1]}}<br/>
+                                    Acousticness: {{song[6]}} &nbsp; {{playlist[2]}}<br/>
+                                    Instrumental: {{song[7]}} &nbsp;&nbsp;&nbsp; {{playlist[3]}}<br/>
+                                    Liveness: {{song[8]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[4]}}<br/>
+                                    Valence: {{song[9]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[5]}}<br/>
+                                    Loudness: {{song[10]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[6]}}<br/>
                                     Tempo: {{song[11]}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{playlist[7]}}"></i> 
                 </p></td>
             </tr>
@@ -48,10 +48,86 @@
         <a href="/"><input class='btn button1' value='Reset'></a>
     </div>
 </div>
-<div class="col-lg">
-    
+<div class="col-lg pl-4">
+    <canvas id="myChart" width="400" height="400"></canvas>
 </div>
+                
 <script>
+    function viewSong(song) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const data = {
+            labels: [
+                'Danceability',
+                'Speechiness',
+                'Acousticness',
+                'Instrumental',
+                'Liveness',
+                'Valence'
+            ],
+            datasets: [{
+                label: 'Playlist',
+                data: {{playlist[:6]}},
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }, {
+                label: 'Song Recommendation',
+                data: song,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }]
+        };
+        let chartStatus = Chart.getChart("myChart"); // <canvas> id
+        if (chartStatus != undefined) {
+            chartStatus.destroy();
+        }
+        const plugin = {
+  id: 'customCanvasBackgroundColor',
+  beforeDraw: (chart, args, options) => {
+    const {ctx} = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = options.color || '#99ffff';
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+        const myChart = new Chart(ctx, {
+            type: 'radar',
+            data: data,
+            options: {
+                elements: {
+                    line: {
+                        borderWidth: 3
+                    }
+                },
+                plugins: {
+                    customCanvasBackgroundColor: {
+                        color: 'white',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Visualize Song Audio Features',
+                        font: {
+                            size: 24,
+                            family: 'sans-serif'
+                        }
+                    },
+                }
+            },
+            plugins: [plugin],
+        });
+    }
+
     $(document).ready(function(){
         $('[data-toggle="popover"]').popover({
             html:true

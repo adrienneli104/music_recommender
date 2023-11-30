@@ -32,8 +32,7 @@ def recommend():
    song_ids = list(model_result['track_id'])
    song_data = data[data['track_id'].isin(song_ids)]
    song_data = song_data.sort_values(by=['track_id'])
-   print("model_result", model_result)
-   print("song_data", song_data)
+   print("playlist_features", playlist_features)
    song_data.insert(0, 'similarity', model_result['similarity'].to_list())
    song_recomendations = []
    # Store spotify song link, track name, artist name, and similarity score
@@ -56,7 +55,7 @@ def recommend():
       valence = round(recommendation['valence'].values[0], 2)
       tempo = round(recommendation['tempo'].values[0], 2)
       song_recomendations.append([track_name, artist_name, link, sim, 
-                                  danceability, loudness, speechiness, 
+                                  danceability, speechiness, 
                                   acousticness, instrumentalness, liveness, 
-                                  valence, tempo])
+                                  valence, loudness, tempo])
    return render_template('results.html',songs= song_recomendations, playlist=playlist_features)

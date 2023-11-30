@@ -15,14 +15,17 @@ def get_mean_features(playlist):
                 'tempo' : 0 }
     for index, row in playlist.iterrows():
         features['danceability'] += row['danceability']
-        features['loudness'] += row['loudness']
         features['speechiness'] += row['speechiness']
         features['acousticness'] += row['acousticness']
         features['instrumentalness'] += row['instrumentalness']
         features['liveness'] += row['liveness']
         features['valence'] += row['valence']
+        features['loudness'] += row['loudness']
         features['tempo'] += row['tempo']
-    return [round(x/n, 2) for x in features.values()]
+    res = []
+    for feature in ['danceability', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'loudness', 'tempo']:
+        res.append(round(features[feature]/n, 2))
+    return res
 
 def extract(URL):
     client_id = "5356afb958c84e71a2c37c43e2a2cbf2" 
