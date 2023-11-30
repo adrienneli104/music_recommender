@@ -9,7 +9,9 @@
                 <i class="bi bi-info-circle" data-container="body" data-toggle="popover" data-placement="left" 
                         data-content="The similarity score measures how 
                         similar the audio features of a song are to the playlist. 
-                        A lower score indicates it's more similar. "></i>
+                        A lower score indicates it's more similar. Some audio
+                        features include danceability, acousticness, and tempo.
+                        These values are extracted via the Spotify API."></i>
             </th>
             </tr>
         </thead>
@@ -49,11 +51,13 @@
     </div>
 </div>
 <div class="col-lg pl-4">
+    <h2 id="inital" class="text-center text-white">Click On Songs To Visualize Audio Features</h2>
     <canvas id="myChart" width="400" height="400"></canvas>
 </div>
                 
 <script>
     function viewSong(song) {
+        document.getElementById('inital').style.display = 'none';
         const ctx = document.getElementById('myChart').getContext('2d');
         const data = {
             labels: [
