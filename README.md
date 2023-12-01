@@ -13,8 +13,7 @@ View on http://127.0.0.1:5000/
 The [dataset](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset/) I used was found on Kaggle and it stores Spotify songs with their audio features.  <br>
 
 I referenced Eric Chang's [web app code](https://github.com/enjuichang/PracticalDataScience-ENCA/tree/main) as a starting point to build the basics of my application such
-as connecting the form view to the backend. However, I used a different data set, created my own model with a different algorithm, implemented Spotify iFrames, 
-the visualizations and Javascript associated to make it interactive. 
+as connecting the form view to the backend. However, I completed changed the underlying implementation details of the recommendation system where I used a different data set, created my own model with a different algorithm, implemented Spotify iFrames, the graph visualizations and Javascript associated to make it interactive. 
 
 ## Model Algorithm
 I used the K-Means Clustering Algorithm for the recommendation model which groups songs together with similar features into clusters so that when given one song, 
