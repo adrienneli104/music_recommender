@@ -26,3 +26,5 @@ determine how well the data fits into their assigned subgroups. <br>
 
 I used the elbow method to determine how many k clusters there should be. This calculates the Within-Cluster-Sum of Squared Errors (WCSS) for different values of k.
 I chose the value of k right as WCSS begins to decrease, which looks like an elbow when plotted. 
+
+In depth details about the model as well as data cleaning and exploration can be found in this [notebook](https://colab.research.google.com/drive/1fJgGk8diNJWF700S8q70iNAxuoifcfqw?usp=sharing).
